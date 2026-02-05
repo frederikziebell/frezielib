@@ -1,3 +1,14 @@
+# authenticate with GCP using the token
+# from a previous bigrquery::bq_auth()
+do_gcs_auth <- function(){
+  scope <-"https://www.googleapis.com/auth/cloud-platform"
+  token <- gargle::token_fetch(scopes = scope)
+  googleCloudStorageR::gcs_auth(token = token)  
+}
+
+# =========================================================
+# taken from https://github.com/frederikziebell/frezielib
+
 # is every observation containing only 
 # the information from col1 and col2
 # unique in the data.frame df?
@@ -23,7 +34,8 @@ check_1_to_n <- function(df, col1, col2){
 #' @param detect_colData_cols Whether to auto detect columns that can be added to the colData.
 #' @param detect_rowData_cols Whether to auto detect columns that can be added to the rowData.
 #' @param ambiguous Where to put ambiguous columns that can be put to both the colData and the rowData (requires
-#' that \code{detect_colData_cols} and \code{detect_rowData_cols} are \code{TRUE}). 
+#' that \code{detect_colData_cols} and \code{detect_rowData_cols} are \code{TRUE}).
+#' @param message_constant Whether to write a message listing which columns are constant.
 df_to_se <- function(
     df,
     observation_id,
@@ -33,7 +45,8 @@ df_to_se <- function(
     feature_anno = NULL,
     detect_colData_cols = TRUE,
     detect_rowData_cols = TRUE,
-    ambiguous = c("both","none","rowData","colData")
+    ambiguous = c("both","none","rowData","colData"),
+    message_constant = FALSE
 ) {
   
   ambiguous <- match.arg(ambiguous)
@@ -108,6 +121,20 @@ df_to_se <- function(
     c(feature_id, observation_id, value, observation_anno, feature_anno)
   )
   
+  # notify about constant columns
+  if(message_constant == TRUE) {
+    constant_cols <- unlist(
+      lapply(rest_cols, function(col){
+        if(length(unique(df[[col]]))==1){
+          col
+        }
+      })
+    )
+    if(length(constant_cols) > 0){
+      message("Columns ", paste0(constant_cols, collapse=", "), " are constant.")
+    }
+  }
+  
   # find out which rest_cols can be put to the colData
   rest_cols_col_data <- c()
   if(detect_colData_cols == TRUE){
@@ -118,7 +145,7 @@ df_to_se <- function(
     }
   }
   
-  # find out which rest_cols can be put to the rowData
+  # find out which rest_cols can be put to the colData
   rest_cols_row_data <- c()
   if(detect_rowData_cols==TRUE){
     for(col in rest_cols){
@@ -188,3 +215,4 @@ df_to_se <- function(
     rowData = row_data
   )
 }
+# =========================================================
