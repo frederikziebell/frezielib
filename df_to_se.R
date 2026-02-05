@@ -1,14 +1,3 @@
-# authenticate with GCP using the token
-# from a previous bigrquery::bq_auth()
-do_gcs_auth <- function(){
-  scope <-"https://www.googleapis.com/auth/cloud-platform"
-  token <- gargle::token_fetch(scopes = scope)
-  googleCloudStorageR::gcs_auth(token = token)  
-}
-
-# =========================================================
-# taken from https://github.com/frederikziebell/frezielib
-
 # is every observation containing only 
 # the information from col1 and col2
 # unique in the data.frame df?
@@ -215,4 +204,3 @@ df_to_se <- function(
     rowData = row_data
   )
 }
-# =========================================================
