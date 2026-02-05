@@ -2,14 +2,14 @@
 # the information from col1 and col2
 # unique in the data.frame df?
 check_unique <- function(df, col1, col2){
-  !any(duplicated(paste0(df[[col1]],df[[col2]])))
+  !anyDuplicated(paste0(df[[col1]],df[[col2]]))
 }
 
 # is there a 1:n mapping between the values
 # in col1 and the ones in col2
 check_1_to_n <- function(df, col1, col2){
   df_unique <- dplyr::distinct(df[,c(col1, col2)])
-  !any(duplicated(df_unique[[col1]]))
+  !anyDuplicated(df_unique[[col1]])
 }
 
 #' Convert data.frame to SummarizedExperiment
