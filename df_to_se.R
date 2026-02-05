@@ -2,7 +2,7 @@
 # the information from col1 and col2
 # unique in the data.frame df?
 check_unique <- function(df, col1, col2){
-  !any(duplicated(df[,c(col1, col2)]))
+  !any(duplicated(paste0(df[[col1]],df[[col2]])))
 }
 
 # is there a 1:n mapping between the values
