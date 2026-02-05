@@ -1,0 +1,26 @@
+```{r}
+library("nanoparquet")
+library("SummarizedExperiment")
+library("tidyverse")
+source("df_to_se.R")
+```
+
+```{r}
+# https://github.com/Walt-Lab/OLINK/tree/main/data
+df <- read_parquet(file = "240214_Walt_Olink_HT_Raw.parquet")
+```
+
+```{r}
+se <- df_to_se(
+  observation_id = "SampleID",
+  feature_id = "OlinkID",
+  value = c("NPX", "ExtNPX"),
+  observation_anno = NULL,
+  feature_anno = NULL,
+  detect_colData_cols = F,
+  detect_rowData_cols = F,
+  ambiguous = "none"
+)
+colnames(colData(se))
+colnames(rowData(se))
+```
