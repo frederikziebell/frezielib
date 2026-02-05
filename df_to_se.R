@@ -8,11 +8,12 @@ check_unique <- function(df, col1, col2){
 # is there a 1:n mapping between the values
 # in col1 and the ones in col2
 check_1_to_n <- function(df, col1, col2){
-  df_unique <- unique(df[,c(col1, col2)])
+  df_unique <- dplyr::distinct(df[,c(col1, col2)])
   !any(duplicated(df_unique[[col1]]))
 }
 
 #' Convert data.frame to SummarizedExperiment
+#' @param df The data.frame to convert
 #' @param observation_id Name of the column that uniquely identifies observations (e.g. a sample ID)
 #' @param feature_id Name of the column that uniquely identifies features (e.g. a gene ID)
 #' @param value Character vector of one or more columns that contain measured values. Each element of
@@ -24,6 +25,7 @@ check_1_to_n <- function(df, col1, col2){
 #' @param ambiguous Where to put ambiguous columns that can be put to both the colData and the rowData (requires
 #' that \code{detect_colData_cols} and \code{detect_rowData_cols} are \code{TRUE}). 
 df_to_se <- function(
+    df,
     observation_id,
     feature_id,
     value,
@@ -149,13 +151,13 @@ df_to_se <- function(
   }
   
   # build data.frame with column info
-  col_data <- unique(df[,col_data_cols,drop=F])
+  col_data <- dplyr::distinct(df[,col_data_cols,drop=F])
   # turn observation_id into rownames
   rownames(col_data) <- col_data[[observation_id]]
   col_data <- col_data[,!colnames(col_data) %in% observation_id, drop = F]
   
   # build data.frame with row info
-  row_data <- unique(df[,row_data_cols,drop=F])
+  row_data <- dplyr::distinct(df[,row_data_cols,drop=F])
   # turn feature_id into rownames
   rownames(row_data) <- row_data[[feature_id]]
   row_data <- row_data[,!colnames(row_data) %in% feature_id, drop = F]
