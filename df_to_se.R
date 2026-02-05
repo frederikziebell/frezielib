@@ -38,7 +38,7 @@ df_to_se <- function(
   
   ambiguous <- match.arg(ambiguous)
   
-  # sanity checks
+  # consistency checks
   if(!is.data.frame(df)){
     stop("df is not a data.frame.")
   }
@@ -60,6 +60,12 @@ df_to_se <- function(
     if(!all(feature_anno %in% colnames(df))){
       stop("One of the columns ", paste0(feature_anno, collapse=", "), " is not a column in the data frame.")
     }
+  }
+  if(anyNA(df[[observation_id]])){
+    stop("Observation ID column ",observation_id, " contains NAs.")
+  }
+  if(anyNA(df[[feature_id]])){
+    stop("Feature ID column ",feature_id, " contains NAs.")
   }
   
   # check if there is exactly one row per (observation_id, feature_id) combination
