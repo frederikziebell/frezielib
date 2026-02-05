@@ -102,6 +102,11 @@ df_to_se <- function(
   } else {
     row_data_cols <- feature_id
   }
+
+  # convert to a pure data.frame
+  # we sometimes have to set rownames
+  # and that is deprecated for e.g. tibbles
+  df <- as.data.frame(df)
   
   # remaining columns in df that are not observations, features, values
   # or already to be added to colData or rowData
