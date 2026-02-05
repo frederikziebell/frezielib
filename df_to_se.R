@@ -112,7 +112,7 @@ df_to_se <- function(
     }
   }
   
-  # find out which rest_cols can be put to the colData
+  # find out which rest_cols can be put to the rowData
   rest_cols_row_data <- c()
   if(detect_rowData_cols==TRUE){
     for(col in rest_cols){
