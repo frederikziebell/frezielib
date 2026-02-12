@@ -45,7 +45,7 @@ df_to_se <- function(
     stop("df is not a data.frame.")
   }
   if(!observation_id %in% colnames(df)){
-    stop("Column ", observation_col, " is not a column in the data frame.")
+    stop("Column ", observation_id, " is not a column in the data frame.")
   }
   if(!feature_id %in% colnames(df)){
     stop("Column ", feature_id, " is not a column in the data frame.")
